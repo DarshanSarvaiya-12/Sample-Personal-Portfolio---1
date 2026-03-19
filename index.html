@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Darshan Sarvaiya | Creative Universe</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-glow: #00d2ff;
+            --secondary-glow: #3a7bd5;
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.15); 
+            --text: #ffffff;
+            --card-grad: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        
+        body {
+            background: linear-gradient(-45deg,#6cb,#2575fc,#e5f,#fe1abb);
+            background-size: 400% 400%;
+            animation: gradientMove 10s ease infinite;
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- RAIN BUBBLE ANIMATION --- */
+        .rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bubble-drop {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            top: -50px;
+            animation: bubbleFall linear infinite;
+        }
+
+        @keyframes bubbleFall {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(110vh) scale(1.2); opacity: 0; }
+        }
+
+        .header-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        #musicToggleContainer {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            backdrop-filter: blur(13px);
+            -webkit-backdrop-filter: blur(13px);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        #floatingHeader {
+            padding: 10px 25px;
+            background: var(--glass);
+            backdrop-filter: blur(13px);
+            -webkit-backdrop-filter: blur(13px);
+            border: 0.5px solid var(--glass-border);
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            color: #000000; /* Changed to Black */
+            cursor: move;
+            touch-action: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        #musicToggle {
+            font-size: 1.3rem;
+            transition: 0.3s;
+        }
+
+        .animated-name {
+            display: inline-block;
+            background: linear-gradient(to right, #000, #008, #ff000f);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            font-weight: bold;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .mesh-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .mesh-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            animation: meshMove 20s infinite alternate;
+            opacity: 0.6;
+        }
+
+        .circle-1 { width: 400px; height: 400px; background: rgba(255,255,255,0.2); top: -10%; left: -10%; }
+        .circle-2 { width: 500px; height: 500px; background: rgba(255,255,255,0.1); bottom: -10%; right: -10%; }
+
+        @keyframes meshMove {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        .nav-dock {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(17px);
+            border-radius: 40px;
+            border: 0.5px solid var(--glass-border);
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .dock-item {
+            color: white;
+            font-size: 1.1rem;
+            text-decoration: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dock-item:hover {
+            transform: translateY(-8px) scale(1.2);
+            color: var(--primary-glow);
+        }
+
+        section {
+            padding: 60px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            text-align: center;
+            padding-top: 120px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+        }
+
+        .hero-image-card {
+            width: 100%;
+            max-height: 380px;
+            margin: 20px 0;
+            border-radius: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(17px);
+            border: 0.5px solid var(--glass-border);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .hero-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.8s ease;
+        }
+
+        .hero-btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .hero-contact-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: #2575fc;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .my-story-btn {
+            padding: 12px 35px;
+            background: linear-gradient(45deg, #ff00cc, #3333ff, #00d2ff);
+            background-size: 200% 200%;
+            animation: gradientMove 3s ease infinite;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .my-story-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 204, 0.4);
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(13px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 8px 0;
+            transition: all 0.4s ease;
+            text-align: left;
+        }
+
+        /* Card titles changed to white */
+        .glass-card h2, .glass-card h3 {
+            color: #ffffff !important;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.18);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* --- BAR CHART STYLES --- */
+        .chart-container {
+            margin-bottom: 40px;
+        }
+
+        .bar-wrapper {
+            margin-bottom: 15px;
+        }
+
+        .bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .bar-bg {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            border-radius: 10px;
+            width: 0;
+            transition: width 2s cubic-bezier(0.1, 0.42, 0.41, 1);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .project-box {
+            position: relative;
+            min-height: 200px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+        }
+
+        /* Ensure project titles are also white */
+        .project-box h3 {
+            color: #ffffff !important;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .project-box p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .skill-tag {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50px;
+            border: 0.5px solid var(--glass-border);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .skill-tag:hover {
+            background: #fff;
+            color: #20c;
+            transform: scale(1.05);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(19px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: rgba(20, 20, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 15px;
+            color: #ffffff; /* Modal title white */
+            text-align: center;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: white;
+        }
+
+        .social-links-separated {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 1.8rem;
+            margin: 30px 0;
+        }
+
+        .social-links-separated a {
+            color: white;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links-separated a:hover {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 8px currentColor);
+        }
+
+        input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 0.5px solid var(--glass-border);
+            background: rgba(255,255,255,0.15);
+            color: white;
+            outline: none;
+        }
+
+        .send-btn {
+            background: white;
+            color: #3a7bd5;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .status-footer {
+            text-align: center;
+            margin-bottom: 80px; 
+            font-size: 0.8rem;
+            color: #000000; /* Changed to Black */
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            section { padding: 40px 15px; }
+            .hero-image-card { height: 220px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="rain-container" id="rain"></div>
+
+    <audio id="bgMusic" loop>
+    <source src="https://github.com/darshansarvaiya-12/Music/raw/main/Liquid_Times.mp3" type="audio/mpeg">
+</audio>
+
+    <div class="modal-overlay" id="skillModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 id="modalTitle">Details</h2>
+            <div id="modalDescription" style="line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <div class="mesh-bg">
+        <div class="mesh-circle circle-1"></div>
+        <div class="mesh-circle circle-2"></div>
+    </div>
+
+    <div class="header-container">
+        <div id="musicToggleContainer">
+            <i class="fa-solid fa-circle-play" id="musicToggle"></i>
+        </div>
+        <header id="floatingHeader">
+            Mywebsite.in
+        </header>
+    </div>
+
+    <section id="home" class="hero">
+        <h1><span class="animated-name">Darshan Sarvaiya</span></h1>
+        <p style="font-size: 1.3rem; font-weight: bold; opacity: 0.9;">Make your own ways !</p>
+
+        <div class="hero-image-card">
+            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" alt="Creative Universe">
+        </div>
+        
+        <div class="hero-btn-container">
+            <a href="#contact" class="hero-contact-btn">Contact Me</a>
+            <button class="my-story-btn" id="openStory">My Story</button>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="glass-card">
+            <h2>Personal Identity :</h2>
+            <p style="margin-top: 12px; font-size: 1.1rem; color: #fff; line-height: 1.6;">
+                Based in Gujarat, I am a self-taught software engineer and business strategist. 
+                I drop complexity to focus on <b>impact</b>. Whether it's the Stock Market or Web Development, 
+                I aim for the top.
+            </p>
+        </div>
+
+        <div class="skills-container">
+            <div class="skill-tag" data-title="Web Development" data-desc="Expertise in HTML5, CSS3, and JavaScript frameworks to build responsive, high-performance websites.">Web Development</div>
+            <div class="skill-tag" data-title="UI/UX Design" data-desc="Creating intuitive user journeys and aesthetic interfaces using modern glassmorphism and minimalist principles.">UI/UX Design</div>
+            <div class="skill-tag" data-title="Stock Market" data-desc="Analyzing market trends, technical patterns, and financial data for strategic investment growth.">Stock Market</div>
+            <div class="skill-tag" data-title="Financial Tech" data-desc="Developing digital solutions for finance, including data intelligence and automated reporting.">Financial Tech</div>
+            <div class="skill-tag" data-title="Business Strategy" data-desc="Planning scalable models and identifying market opportunities to maximize business impact.">Business Strategy</div>
+            <div class="skill-tag" data-title="JavaScript" data-desc="Mastering the language of the web to create interactive, dynamic, and complex logic for modern apps.">JavaScript</div>
+        </div>
+    </section>
+
+    <section id="stats">
+        <div class="glass-card chart-container">
+            <h2 style="margin-bottom: 25px;">Expertise Analysis</h2>
+            
+            <div class="bar-wrapper">
+                <div class="bar-label"><span>Web Development</span><span>10%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 10%;"></div></div>
+            </div>
+
+            <div class="bar-wrapper">
+                <div class="bar-label"><span>UI UX Designs</span><span>25%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 25%;"></div></div>
+            </div>
+
+            <div class="bar-wrapper">
+                <div class="bar-label"><span>Figma</span><span>40%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 40%;"></div></div>
+            </div>
+
+            <div class="bar-wrapper">
+                <div class="bar-label"><span>Java</span><span>15%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 15%;"></div></div>
+            </div>
+
+            <div class="bar-wrapper">
+                <div class="bar-label"><span>Learning</span><span>5%</span></div>
+                <div class="bar-bg"><div class="bar-fill" style="width: 5%;"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2 style="margin-bottom: 20px; text-align: left;">About Me :</h2>
+        <div class="project-grid">
+            <div class="glass-card project-box">
+                <h3>Job Experience :</h3>
+                <p>Developing Financial Intelligence systems and maintaining high-scale web architectures. Focused on bringing automation to financial analysis.</p>
+            </div>
+            <div class="glass-card project-box">
+                <h3>Education :</h3>
+                <p>Continual self-taught journey in Computer Science and Finance. Specialized in Modern Web Technologies and Algorithm design.</p>
+            </div>
+            <div class="glass-card project-box">
+                <h3>Targets :</h3>
+                <p>Building a robust Template Ecosystem (Qsine.in) and a next-gen LLM Interface (Mira.ai) to empower creators and traders worldwide.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="glass-card" style="text-align: left;">
+            <h2 style="font-size: 2.2rem; margin-bottom: 15px;">Let's Create.</h2>
+            <form style="display: flex; flex-direction: column; align-items: flex-start; gap: 15px;" id="contactForm">
+                <input type="text" placeholder="Your Name" required>
+                <input type="email" placeholder="Your Email" required>
+                <button type="submit" class="send-btn">Get In Touch</button>
+            </form>
+        </div>
+
+        <div class="social-links-separated">
+            <a href="#" class="tw-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="li-icon"><i class="fab fa-linkedin"></i></a>
+            <a href="https://wa.me/yournumber" class="wa-icon"><i class="fab fa-whatsapp"></i></a>
+        </div>
+
+        <div class="status-footer">
+            • All Systems Normal
+        </div>
+    </section>
+
+    <nav class="nav-dock">
+        <a href="#home" class="dock-item"><i class="fa-solid fa-house"></i></a>
+        <a href="#projects" class="dock-item"><i class="fa-solid fa-code"></i></a>
+        <a href="#about" class="dock-item"><i class="fa-solid fa-user"></i></a>
+        <a href="#contact" class="dock-item"><i class="fa-solid fa-paper-plane"></i></a>
+    </nav>
+
+    <script>
+        // --- RAIN BUBBLE GENERATOR ---
+        function createRain() {
+            const rainContainer = document.getElementById('rain');
+            const dropCount = 40;
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('bubble-drop');
+                const size = Math.random() * 15 + 5;
+                drop.style.width = size + 'px';
+                drop.style.height = size + 'px';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                drop.style.animationDelay = Math.random() * 5 + 's';
+                rainContainer.appendChild(drop);
+            }
+        }
+        createRain();
+
+        // --- POPUP LOGIC ---
+        const modal = document.getElementById('skillModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDescription');
+        const closeBtn = document.getElementById('closeModal');
+
+        function openModal(title, content) {
+            modalTitle.innerText = title;
+            modalDesc.innerHTML = content;
+            modal.style.display = 'flex';
+        }
+
+        document.querySelectorAll('.skill-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                openModal(tag.getAttribute('data-title'), tag.getAttribute('data-desc'));
+            });
+        });
+
+        // --- MY STORY LOGIC ---
+        const storyContent = `
+            <p>I am <b>Darshan Sarvaiya</b>, a self-taught software engineer originally from <b>Savarkundla</b>. My path hasn't been traditional; I decided to leave college after my first year to pursue my passion for technology on my own terms.</p><br>
+            <p>For the past six months, I have been teaching myself software engineering using nothing but my <b>mobile phone</b>. This challenge has fueled my creativity and pushed me to find efficient ways to build complex web applications and modern UI/UX designs.</p><br>
+            <p>My interests extend beyond code into the <b>Stock Market</b> and financial analysis. I'm currently working on several ambitious projects like <b>assume.in</b>, <b>Wisel</b>, and <b>Qcell</b>, with the goal of launching my own financial tech company and a specialized stock market magazine.</p><br>
+            <p>Every line of code I write is a step toward making my own ways. "Make your own ways" isn't just a tagline—it's how I live.</p>
+        `;
+
+        document.getElementById('openStory').addEventListener('click', () => {
+            openModal('My Story', storyContent);
+        });
+
+        closeBtn.onclick = () => modal.style.display = 'none';
+        window.onclick = (event) => { if (event.target == modal) modal.style.display = 'none'; }
+
+        // --- MUSIC LOGIC ---
+        const audio = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        const musicContainer = document.getElementById('musicToggleContainer');
+        audio.volume = 0.2;
+
+        musicContainer.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                musicToggle.classList.replace('fa-circle-play', 'fa-circle-pause');
+            } else {
+                audio.pause();
+                musicToggle.classList.replace('fa-circle-pause', 'fa-circle-play');
+            }
+        });
+
+        // --- DRAGGABLE HEADER LOGIC ---
+        const header = document.getElementById('floatingHeader');
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        header.addEventListener("mousedown", dragStart);
+        header.addEventListener("touchstart", dragStart, {passive: false});
+        window.addEventListener("mousemove", drag);
+        window.addEventListener("touchmove", drag, {passive: false});
+        window.addEventListener("mouseup", dragEnd);
+        window.addEventListener("touchend", dragEnd);
+
+        function dragStart(e) {
+            if (e.type === "touchstart") {
+                initialX = e.touches[0].clientX - xOffset;
+                initialY = e.touches[0].clientY - yOffset;
+            } else {
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+            }
+            if (e.target === header) isDragging = true;
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                if (e.type === "touchmove") {
+                    currentX = e.touches[0].clientX - initialX;
+                    currentY = e.touches[0].clientY - initialY;
+                } else {
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                }
+                xOffset = currentX;
+                yOffset = currentY;
+                setTranslate(currentX, currentY, header);
+            }
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        function dragEnd() {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        // --- Smooth Scrolling ---
+        document.querySelectorAll('.dock-item, .hero-contact-btn').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if(href.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if(target) {
+                        target.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        document.getElementById('contactForm').onsubmit = (e) => {
+            e.preventDefault();
+            alert("Success! Darshan will get back to you shortly.");
+        };
+    </script>
+</body>
+</html>
